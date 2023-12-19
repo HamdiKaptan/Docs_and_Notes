@@ -29,7 +29,7 @@
 
    Now our worker and master nodes are running and communicating each other.
 
-   ###DevOps Case 1.a
+   ### DevOps Case 1.a
   
 ## 6. Installing Helm to Master Node
 
@@ -47,7 +47,7 @@
    kubectl expose svc prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext  
 
    accesing the prometheus with external-ip:nodePort
-   ###DevOps Case 1.b
+   ### DevOps Case 1.b
 
 ## 8. Create Alerts for 3 of Metrics,
 
