@@ -1,0 +1,35 @@
+groups:
+- name: ContainerNotRunningAlert
+  rules:
+  - alert: KubernetesContainerNotRunning
+    expr: kube_pod_container_status_waiting_reason{namespace="default"} 
+    for: 5m
+    labels:
+      environment: default
+      severity: critical 
+    annotations:
+      title: "pod {{ $labels.pod }} in namespace(s) {{$labels.namespace}} , {{ $labels.reason }} state for more than 5 minutes"
+      description: "The container {{ $labels.container }} of pod {{ $labels.pod }} in namespace(s) {{$labels.namespace}} has been in {{ $labels.reason }} state for more than 5 minutes\n  LABELS: {{ $labels }}" 
+      
+- name: PrometheusNotConnectedToAlertmanager
+  rules:
+  - alert: PrometheusNotConnectedToAlertmanager
+    expr: prometheus_notifications_alertmanagers_discovered < 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Prometheus not connected to alertmanager (instance {{ $labels.instance }})
+      description: "Prometheus cannot connect the alertmanager\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+- name: NodeCpuUsage
+  rules:
+  - alert: NodeCPUUsageAlert
+    expr: sum by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100 < 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Node CPU usage is high"
+      title: "Node CPU Alert"
+      description: "CPU usage on node {{ $labels.instance }} is above 80%."
